@@ -1,13 +1,13 @@
-package com.example.CRUDEmp;
+package com.example.employeemanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CrudEmpApplication {
+public class EmployeeManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CrudEmpApplication.class, args);
+		SpringApplication.run(EmployeeManagementApplication.class, args);
 	}
 
 }

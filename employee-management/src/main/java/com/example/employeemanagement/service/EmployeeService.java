@@ -1,13 +1,12 @@
-package com.example.CRUDEmp.service;
+package com.example.employeemanagement.service;
 
-import com.example.CRUDEmp.entity.Employee;
-import com.example.CRUDEmp.repository.EmployeeRepository;
+import com.example.employeemanagement.entity.Employee;
+import com.example.employeemanagement.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {

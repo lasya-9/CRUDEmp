@@ -1,6 +1,6 @@
-package com.example.CRUDEmp.repository;
+package com.example.employeemanagement.repository;
 
-import com.example.CRUDEmp.entity.Employee;
+import com.example.employeemanagement.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

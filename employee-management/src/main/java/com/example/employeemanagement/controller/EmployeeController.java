@@ -1,7 +1,7 @@
-package com.example.CRUDEmp.controller;
+package com.example.employeemanagement.controller;
 
-import com.example.CRUDEmp.entity.Employee;
-import com.example.CRUDEmp.service.EmployeeService;
+import com.example.employeemanagement.entity.Employee;
+import com.example.employeemanagement.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
