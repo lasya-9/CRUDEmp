@@ -1,45 +1,46 @@
 package com.example.employeemanagement.controller;
 
+import com.example.employeemanagement.dto.EmployeeDTO;
 import com.example.employeemanagement.entity.Employee;
 import com.example.employeemanagement.service.EmployeeService;
+import com.example.employeemanagement.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.example.employeemanagement.constant.Constant.*;
 
 @RestController
 public class EmployeeController {
     @Autowired
-    private EmployeeService service;
+    private EmployeeService employeeService;
 
-    @PostMapping("/addEmployee")
-    public Employee saveEmployee(@RequestBody Employee employee){
-        return service.addEmployee(employee);
+    @PostMapping("/employee")
+    public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        Employee employee = employeeService.addEmployee(employeeDTO);
+        return ResponseUtils.response(EMPLOYEE_CREATED_SUCCESSFULY, HttpStatus.CREATED, employee.getEmpId());
     }
 
-    @GetMapping("/getAllEmployees")
-    public List<Employee> getAll(){
-        return service.getAllEmployees();
+    @GetMapping("/employees")
+    public ResponseEntity getAll() {
+        return ResponseUtils.response(LIST_EMPLOYEES, HttpStatus.OK, employeeService.getAllEmployees());
     }
 
-    @GetMapping("/getEmployeeById")
-    public Employee getEmployee(@RequestParam Long empId){
-        return service.getEmployeeById(empId);
+    @GetMapping("/employee/{empId}")
+    public ResponseEntity getEmployee(@PathVariable Long empId) {
+        return ResponseUtils.response(EMPLOYEE_DETAILS, HttpStatus.OK, employeeService.getEmployeeById(empId));
     }
 
-    @PutMapping("/updateEmployee")
-    public Employee editEmployee(@RequestBody Employee employee){
-        return service.updateEmployee(employee);
+    @PutMapping("/employee/{empId}")
+    public ResponseEntity editEmployee(@PathVariable Long empId, @RequestBody EmployeeDTO employeeDTO) {
+        employeeService.updateEmployee(empId, employeeDTO);
+        return ResponseUtils.response(EMPLOYEE_UPDATED_SUCCESSFULLY, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteEmployee")
-    public String deleteEmployee(@RequestParam Long empId){
-        return service.deleteEmployee(empId);
+    @DeleteMapping("/employee/{empId}")
+    public ResponseEntity deleteEmployee(@PathVariable Long empId) {
+        employeeService.deleteEmployee(empId);
+        return ResponseUtils.response(EMPLOYEE_DELETED_SUCCESSFULLY, HttpStatus.OK);
     }
 }

@@ -1,40 +1,47 @@
 package com.example.employeemanagement.service;
 
+import com.example.employeemanagement.dto.EmployeeDTO;
 import com.example.employeemanagement.entity.Employee;
 import com.example.employeemanagement.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
+@Validated
 public class EmployeeService {
     @Autowired
-    private EmployeeRepository repository;
-    public Employee addEmployee(Employee employee) {
-        return repository.save(employee);
+    private EmployeeRepository employeeRepository;
+
+    public Employee addEmployee(@Valid EmployeeDTO employeeDTO) {
+        Employee employee = EmployeeDTO.getEmployee(employeeDTO);
+        return employeeRepository.save(employee);
     }
 
     public List<Employee> getAllEmployees() {
-        return repository.findAll();
+        return employeeRepository.findAll();
     }
 
     public Employee getEmployeeById(Long empId) {
-       return repository.findById(empId).orElseThrow(()->new EntityNotFoundException("Employee with given id : "+empId));
+        return employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with given id : " + empId + " not found"));
 
     }
 
-    public Employee updateEmployee(Employee employee) {
-        Employee existingEmployee = repository.getReferenceById(employee.getEmpId());
-        existingEmployee.setFirstName(employee.getFirstName());
-        existingEmployee.setLastName(employee.getLastName());
-        existingEmployee.setSalary(employee.getSalary());
-        return repository.save(existingEmployee);
+    public Employee updateEmployee(@NotNull(message = "invalid") Long empId, @Valid EmployeeDTO employeeDTO) {
+        Employee existingEmployee = employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with given id : " + empId + " not found"));
+        existingEmployee.setFirstName(employeeDTO.getFirstName());
+        existingEmployee.setLastName(employeeDTO.getLastName());
+        existingEmployee.setSalary(employeeDTO.getSalary());
+        return employeeRepository.save(existingEmployee);
     }
 
-    public String deleteEmployee(Long empId) {
-        repository.deleteById(empId);
-        return "Employee with id : "+ empId+" deleted successfully";
+    public void deleteEmployee(Long empId) {
+        Employee employee = employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with given id : " + empId + " not found"));
+        employeeRepository.delete(employee);
     }
 }
