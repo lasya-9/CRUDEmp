@@ -49,7 +49,7 @@ public class EmployeeController {
     @PostMapping("/employee")
     public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         Employee employee = employeeService.addEmployee(employeeDTO);
-        return ResponseUtils.response(EMPLOYEE_CREATED_SUCCESSFULY, HttpStatus.CREATED, employee.getEmpId());
+        return ResponseUtils.response(EMPLOYEE_CREATED_SUCCESSFULLY, HttpStatus.CREATED, employee.getEmpId());
     }
 
     /**
