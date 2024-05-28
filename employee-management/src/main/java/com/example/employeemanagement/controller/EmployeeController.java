@@ -30,8 +30,13 @@ import static com.example.employeemanagement.constant.Constant.*;
 @RestController
 @Tag(name = "Employee", description = "List of all APIs related to Employee")
 public class EmployeeController {
+
+    private final EmployeeService employeeService;
+
     @Autowired
-    private EmployeeService employeeService;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     /**
      * This method is used to Add Employees
@@ -47,7 +52,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @PostMapping("/employee")
-    public ResponseEntity saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<Object> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         Employee employee = employeeService.addEmployee(employeeDTO);
         return ResponseUtils.response(EMPLOYEE_CREATED_SUCCESSFULLY, HttpStatus.CREATED, employee.getEmpId());
     }
@@ -65,12 +70,12 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @GetMapping("/employees")
-    public ResponseEntity getAll() {
+    public ResponseEntity<Object> getAll() {
         return ResponseUtils.response(LIST_EMPLOYEES, HttpStatus.OK, employeeService.getAllEmployees());
     }
 
     /**
-     * This method is used to get Employee by Id
+     * This method is used to get Employee by ID
      *
      * @param empId Long
      * @return Employee
@@ -87,16 +92,16 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @GetMapping("/employee/{empId}")
-    public ResponseEntity getEmployee(@PathVariable Long empId) {
+    public ResponseEntity<Object> getEmployee(@PathVariable Long empId) {
         return ResponseUtils.response(EMPLOYEE_DETAILS, HttpStatus.OK, employeeService.getEmployeeById(empId));
     }
 
     /**
      * This method is used to Update Employee
      *
-     * @param empId Long
+     * @param empId       Long
      * @param employeeDTO EmployeeDTO
-     * @return Employee
+     * @return ResponseStatus
      */
     @Operation(summary = "Update Employee", description = "Update Employee", tags = {
             "Employee"})
@@ -110,7 +115,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @PutMapping("/employee/{empId}")
-    public ResponseEntity editEmployee(@PathVariable Long empId, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<Object> editEmployee(@PathVariable Long empId, @RequestBody EmployeeDTO employeeDTO) {
         employeeService.updateEmployee(empId, employeeDTO);
         return ResponseUtils.response(EMPLOYEE_UPDATED_SUCCESSFULLY, HttpStatus.OK);
     }
@@ -133,7 +138,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @DeleteMapping("/employee/{empId}")
-    public ResponseEntity deleteEmployee(@PathVariable Long empId) {
+    public ResponseEntity<Object> deleteEmployee(@PathVariable Long empId) {
         employeeService.deleteEmployee(empId);
         return ResponseUtils.response(EMPLOYEE_DELETED_SUCCESSFULLY, HttpStatus.OK);
     }

@@ -16,7 +16,10 @@ import java.util.List;
 @Validated
 public class EmployeeService {
     @Autowired
-    private EmployeeRepository employeeRepository;
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+    private final EmployeeRepository employeeRepository;
 
     public Employee addEmployee(@Valid EmployeeDTO employeeDTO) {
         Employee employee = EmployeeDTO.getEmployee(employeeDTO);
@@ -32,12 +35,12 @@ public class EmployeeService {
 
     }
 
-    public Employee updateEmployee(@NotNull(message = "invalid") Long empId, @Valid EmployeeDTO employeeDTO) {
+    public void updateEmployee(@NotNull(message = "invalid") Long empId, @Valid EmployeeDTO employeeDTO) {
         Employee existingEmployee = employeeRepository.findById(empId).orElseThrow(() -> new EntityNotFoundException("Employee with given id : " + empId + " not found"));
         existingEmployee.setFirstName(employeeDTO.getFirstName());
         existingEmployee.setLastName(employeeDTO.getLastName());
         existingEmployee.setSalary(employeeDTO.getSalary());
-        return employeeRepository.save(existingEmployee);
+        employeeRepository.save(existingEmployee);
     }
 
     public void deleteEmployee(Long empId) {
