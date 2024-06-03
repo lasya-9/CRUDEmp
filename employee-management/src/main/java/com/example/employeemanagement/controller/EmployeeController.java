@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class EmployeeController {
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
+
     }
 
     /**
@@ -70,6 +72,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @GetMapping("/employees")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getAll() {
         return ResponseUtils.response(LIST_EMPLOYEES, HttpStatus.OK, employeeService.getAllEmployees());
     }
@@ -92,6 +95,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
     @GetMapping("/employee/{empId}")
+    @PreAuthorize("hasRole('ROLE_WRITE')")
     public ResponseEntity<Object> getEmployee(@PathVariable Long empId) {
         return ResponseUtils.response(EMPLOYEE_DETAILS, HttpStatus.OK, employeeService.getEmployeeById(empId));
     }
@@ -137,6 +141,7 @@ public class EmployeeController {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "500", description = "Internal Server error", content = {
                     @Content(schema = @Schema(implementation = ResponseStatus.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/employee/{empId}")
     public ResponseEntity<Object> deleteEmployee(@PathVariable Long empId) {
         employeeService.deleteEmployee(empId);
